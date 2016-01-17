@@ -4,7 +4,7 @@
   "description": "The view module of MToolkit framework",
   "keywords": ["framework","toolkit", "Qt", ".NET", "web framework", "php", "fast", "simple", "free", "library"],
   "type": "library",
-  "homepage": "http://mpstyle.github.io/MToolkit/",
+  "homepage": "http://mtoolkit.github.io/mtoolkit/",
   "license": "LGPL-3.0+",
   "authors": [
     {
