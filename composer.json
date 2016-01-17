@@ -1,7 +1,7 @@
 {
   "name": "mtoolkit/mtoolkit-view",
   "version": "0.0.2",
-  "description": "The core of the PHP framework to write less and do more",
+  "description": "The view module of MToolkit framework",
   "keywords": ["framework","toolkit", "Qt", ".NET", "web framework", "php", "fast", "simple", "free", "library"],
   "type": "library",
   "homepage": "http://mpstyle.github.io/MToolkit/",
