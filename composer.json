@@ -1,0 +1,38 @@
+{
+  "name": "mtoolkit/mtoolkit-view",
+  "version": "0.0.2",
+  "description": "The core of the PHP framework to write less and do more",
+  "keywords": ["framework","toolkit", "Qt", ".NET", "web framework", "php", "fast", "simple", "free", "library"],
+  "type": "library",
+  "homepage": "http://mpstyle.github.io/MToolkit/",
+  "license": "LGPL-3.0+",
+  "authors": [
+    {
+      "name": "Michele Pagnin",
+      "email": "pagnin.michele@gmail.com",
+      "homepage": "http://mpmp.altervista.org",
+      "role": "Main Developer"
+    }
+  ],
+  "support": {
+    "email": "pagnin.michele@gmail.com"
+  },
+
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "../mtoolkit-core/"
+    }
+  ],
+
+  "require": {
+    "php": ">=5.3.0",
+    "mtoolkit/mtoolkit-core": "dev-master",
+    "querypath/QueryPath": ">=3.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "mtoolkit\\view\\": "./src/"
+    }
+  }
+}
