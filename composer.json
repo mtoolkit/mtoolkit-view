@@ -17,18 +17,9 @@
   "support": {
     "email": "pagnin.michele@gmail.com"
   },
-
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "../mtoolkit-core/"
-    }
-  ],
-
   "require": {
     "php": ">=5.3.0",
-    "mtoolkit/mtoolkit-core": "dev-master",
-    "querypath/QueryPath": ">=3.0.0"
+    "mtoolkit/mtoolkit-core": "dev-master"
   },
   "autoload": {
     "psr-4": {
