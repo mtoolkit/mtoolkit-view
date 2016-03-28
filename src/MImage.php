@@ -207,8 +207,8 @@ class MImage
 
         $newResource = imagecreatetruecolor( $width, $height );
 
-        imageAlphaBlending( $newResource, true );
-        imageSaveAlpha( $newResource, true );
+        imagealphablending( $newResource, false );
+        imagesavealpha( $newResource, true );
         imagecopyresampled( $newResource, $this->resource, 0, 0, 0, 0, $width, $height, $this->getWidth(), $this->getHeight() );
 
         $newImage = MImage::fromResource( $newResource );
