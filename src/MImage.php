@@ -22,6 +22,7 @@ namespace mtoolkit\view;
  */
 
 use mtoolkit\core\enum\AspectRatioMode;
+use mtoolkit\core\enum\ContentType;
 use mtoolkit\core\MFileInfo;
 
 class MImage
@@ -30,36 +31,37 @@ class MImage
      * @var string|null
      */
     private $fileName = null;
-    
+
     /**
      * @var resource
      */
     private $resource = null;
-    
+
     /**
      * @var int
      */
     private $height = -1;
-    
+
     /**
      * @var int
      */
     private $width = -1;
-    
+
     /**
      * @var string|null
      */
     private $type = null;
 
     /**
-     * Saves the image to the file with the given <i>$fileName</i>, 
+     * Saves the image to the file with the given <i>$fileName</i>,
      * using the given image file <i>$format</i> and quality factor. <br />
-     * The <i>$quality</i> factor must be in the range 0 to 100 or -1. 
-     * Specify 0 to obtain small compressed files, 100 for large uncompressed files, 
+     * The <i>$quality</i> factor must be in the range 0 to 100 or -1.
+     * Specify 0 to obtain small compressed files, 100 for large uncompressed files,
      * and -1 (the default) to use the default settings.<br />
      * Returns true if the image was successfully saved; otherwise returns false.
-     * 
-     * @param string $fileName The path to save the file to. If not set or NULL, the raw image stream will be outputted directly.
+     *
+     * @param string $fileName The path to save the file to. If not set or NULL, the raw image stream will be outputted
+     *                         directly.
      * @param string $format
      * @param int $quality
      * @return boolean
@@ -89,6 +91,31 @@ class MImage
     }
 
     /**
+     * @param string $format
+     * @param int $quality
+     */
+    public function render( $format = 'png', $quality = -1 )
+    {
+        $format = ($this->type != null ? $this->type : $format);
+
+        switch( $format )
+        {
+            case 'gif':
+                header( ContentType::IMAGE_GIF );
+                imagegif( $this->resource );
+                break;
+            case 'jpg':
+                header( ContentType::IMAGE_JPEG );
+                imagepng( $this->resource, null, $quality );
+                break;
+            default:
+                header( ContentType::IMAGE_PNG );
+                imagepng( $this->resource, null, $quality );
+                break;
+        }
+    }
+
+    /**
      * Something like that:
      * <code>
      * $string = 'iVBORw0KGgoAAAANSUhEUgAAABwAAAASCAMAAAB/2U7WAAAABl'
@@ -98,7 +125,7 @@ class MImage
      * $string = base64_decode($string);
      * $im = imagecreatefromstring($string);
      * </code>
-     * 
+     *
      * @param string $string
      * @return \MToolkit\View\MImage
      */
@@ -120,7 +147,7 @@ class MImage
 
     /**
      * Resizes the color table to contain colorCount entries.
-     * 
+     *
      * @param int $colorCount
      */
     public function setColorCount( $colorCount )
@@ -129,14 +156,14 @@ class MImage
     }
 
     /**
-     * Returns a copy of the image scaled to a rectangle with the given width 
+     * Returns a copy of the image scaled to a rectangle with the given width
      * and height according to the given aspectRatioMode and transformMode.
-     * If either the width or the height is zero or negative, 
+     * If either the width or the height is zero or negative,
      * this function returns a null image.
-     * 
+     *
      * @param int $width
      * @param int $height
-     * @param AspectRatioMode $aspectRatioMode
+     * @param int|AspectRatioMode $aspectRatioMode
      * @return MImage Description
      */
     public function scaled( $width, $height, $aspectRatioMode = AspectRatioMode::IGNORE_ASPECT_RATIO )
@@ -146,10 +173,10 @@ class MImage
             case AspectRatioMode::IGNORE_ASPECT_RATIO:
                 break;
             case AspectRatioMode::KEEP_ASPECT_RATIO:
-                $height = ( $width * $this->getHeight() ) / $this->getWidth();
+                $height = ($width * $this->getHeight()) / $this->getWidth();
                 break;
             case AspectRatioMode::KEEP_ASPECT_RATIO_BY_EXPANDING:
-                $width = ( $height * $this->getWidth() ) / $this->getHeight();
+                $width = ($height * $this->getWidth()) / $this->getHeight();
                 break;
         }
 
@@ -163,10 +190,10 @@ class MImage
     }
 
     /**
-     * Returns a scaled copy of the image. 
-     * The returned image is scaled to the given height using the specified 
+     * Returns a scaled copy of the image.
+     * The returned image is scaled to the given height using the specified
      * transformation mode.
-     * 
+     *
      * @param int $height
      * @return MImage
      */
@@ -176,9 +203,9 @@ class MImage
     }
 
     /**
-     * Returns a scaled copy of the image. 
+     * Returns a scaled copy of the image.
      * The returned image is scaled to the given width using the specified transformation mode.
-     * 
+     *
      * @param int $width
      * @return MImage
      */
@@ -189,7 +216,7 @@ class MImage
 
     /**
      * Returns the size of the color table for the image.
-     * 
+     *
      * @return int
      */
     public function colorCount()
@@ -200,19 +227,19 @@ class MImage
     /**
      * Returns true if it is a null image, otherwise returns false.
      * A null image has all parameters set to zero and no allocated data.
-     * 
+     *
      * @return boolean
      */
     public function isNull()
     {
-        return ( $this->resource == null );
+        return ($this->resource == null);
     }
 
     /**
-     * Loads an image from the file with the given fileName. 
+     * Loads an image from the file with the given fileName.
      * Returns true if the image was successfully loaded; otherwise returns false.
      * The loader attempts to read the image using the specified format, e.g., PNG or JPG.
-     * 
+     *
      * @param string $fileName
      * @return boolean
      */
@@ -231,17 +258,23 @@ class MImage
                 imageSaveAlpha( $resource, true );
             }
         }
-        else if( $this->type == "gif" )
-        {
-            $resource = imagecreatefromgif( $fileName );
-        }
-        else if( $this->type == "jpg" || $this->type == "jpeg" )
-        {
-            $resource = imagecreatefromjpeg( $fileName );
-        }
         else
         {
-            return false;
+            if( $this->type == "gif" )
+            {
+                $resource = imagecreatefromgif( $fileName );
+            }
+            else
+            {
+                if( $this->type == "jpg" || $this->type == "jpeg" )
+                {
+                    $resource = imagecreatefromjpeg( $fileName );
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
 
         if( $resource === false )
@@ -259,7 +292,7 @@ class MImage
 
     /**
      * Returns the height of the image.
-     * 
+     *
      * @return int
      */
     public function getHeight()
@@ -269,7 +302,7 @@ class MImage
 
     /**
      * Returns the width of the image.
-     * 
+     *
      * @return int
      */
     public function getWidth()
@@ -279,7 +312,7 @@ class MImage
 
     /**
      * Returns the format of the image.
-     * 
+     *
      * @return string
      */
     public function getFormat()
@@ -288,16 +321,16 @@ class MImage
     }
 
     /**
-     * Returns true if pos is a valid coordinate pair within the image; 
+     * Returns true if pos is a valid coordinate pair within the image;
      * otherwise returns false.
-     * 
+     *
      * @param int $x
      * @param int $y
      * @return boolean
      */
     public function valid( $x, $y )
     {
-        return ( $x > 0 && $x < $this->getWidth() && $y > 0 && $y < $this->getHeight() );
+        return ($x > 0 && $x < $this->getWidth() && $y > 0 && $y < $this->getHeight());
     }
 
 }
