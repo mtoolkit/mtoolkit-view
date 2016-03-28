@@ -145,6 +145,31 @@ class MImage
         return $newImage;
     }
 
+    public static function fromFile( $type, $filePath )
+    {
+        switch( $type )
+        {
+            case 'gif':
+                $im = imagecreatefromgif( $filePath );
+                imageAlphaBlending( $im, true );
+                imageSaveAlpha( $im, true );
+                break;
+            case 'jpg':
+                $im = imagecreatefromjpeg( $filePath );
+                break;
+            case 'bmp':
+                $im = imagecreatefromwbmp( $filePath );
+                break;
+            default:
+                $im = imagecreatefrompng( $filePath );
+                imageAlphaBlending( $im, true );
+                imageSaveAlpha( $im, true );
+                break;
+        }
+
+        return MImage::fromResource( $im );
+    }
+
     /**
      * Resizes the color table to contain colorCount entries.
      *
